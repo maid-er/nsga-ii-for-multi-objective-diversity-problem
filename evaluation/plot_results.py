@@ -27,6 +27,7 @@ for count, inst in enumerate(instances):
                                      ' & Capacity: ' + result_table.Capacity.astype(str))
 
         fig.add_scatter(x=result_table['MaxMin'], y=result_table['MaxSum'],
+                        text=result_table[legend_name],
                         mode='markers', line_color=colors[file_count], row=row, col=col,
                         name=plot_name, legendgroup=plot_name,
                         showlegend=True if count == 0 else False)

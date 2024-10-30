@@ -82,7 +82,8 @@ def execute_instance(path: str, results: OutputHandler) -> float:
     fig = px.scatter(x=[-f[0] for f in res.F], y=[-f[1] for f in res.F])
     fig.show()
 
-    result_table = np.array(-res.F).T.tolist() + np.array(-res.G).T.tolist()
+    constraints = np.array(res.G) + np.array([inst['K'], inst['B']])
+    result_table = np.array(-res.F).T.tolist() + constraints.T.tolist()
 
     # Print the best solutions found
     logging.info("Best solutions (with binary decision variables):")
