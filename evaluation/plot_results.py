@@ -10,7 +10,7 @@ files = ['results_1.csv', 'ref_results_1.csv']
 colors = px.colors.qualitative.Plotly
 
 instances = os.listdir(directory)
-fig = make_subplots(rows=3, cols=2)
+fig = make_subplots(rows=3, cols=2, subplot_titles=instances)
 col, row = 1, 1
 for count, inst in enumerate(instances):
     inst_path = os.path.join(directory, inst)
@@ -36,7 +36,8 @@ for count, inst in enumerate(instances):
     fig.update_traces(marker={'size': 8})
     fig.update_xaxes(title_text='MaxMin')
     fig.update_yaxes(title_text='MaxSum')
-    fig.update_layout(title_text=inst)
+    # fig.update_layout(title_text=inst)
+    fig.update_layout(height=800)
 
     if col == 2:
         row += 1

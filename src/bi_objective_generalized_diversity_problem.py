@@ -40,7 +40,7 @@ class BiObjectiveGeneralizedDiversityProblem(Problem):
             if len(selected) > 1:
                 # Max-Sum: Sum of pairwise distances between selected elements
                 sum_dist = np.sum([self.dist_matrix[i, j]
-                                   for i in selected for j in selected if i != j])
+                                   for i in selected for j in selected if i < j])
                 f1.append(-sum_dist)  # Multiply by -1 to maximize
 
                 # Max-Min: Minimum distance between selected elements
