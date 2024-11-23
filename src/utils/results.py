@@ -32,7 +32,7 @@ class OutputHandler:
 
         return fig
 
-    def save(self, table: pd.DataFrame, secs: float, figure: go.Figure, params: str, instance: str):
+    def save(self, table: pd.DataFrame, secs: float, figure: go.Figure, params: str, instance: str, algo: str):
         '''
         This function saves the solution DataFrame as a CSV and the Figure as an HTML file in a
         specified directory structure that contains the instance name and execution number as ID.
@@ -46,7 +46,7 @@ class OutputHandler:
         instance_path = instance.split(os.sep)[1:]
         instance_path = [s.replace('.txt', '') for s in instance_path]
         output_path = os.path.join('output',
-                                   'NSGA-II',
+                                   algo,
                                    *instance_path)
 
         os.makedirs(output_path, exist_ok=True)
@@ -86,7 +86,7 @@ class OutputHandler:
         time_file = os.path.join(path, 'ex_times.csv')
         if os.path.exists(time_file):
             time_table = pd.read_csv(time_file)
-            time_table = time_table.append(
+            time_table = time_table._append(
                 pd.DataFrame({'ex_number': [self.execution_n],
                               'time': [secs]}))
         else:
