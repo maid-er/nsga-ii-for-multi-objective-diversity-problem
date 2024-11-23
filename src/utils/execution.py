@@ -79,25 +79,29 @@ def execute_instance(path: str, results: OutputHandler) -> float:
     logging.info('Execution time: %s', secs)
 
     # Visualize the Pareto front (objective space)
-    fig = px.scatter(x=[-f[0] for f in res.F], y=[-f[1] for f in res.F])
-    fig.show()
+    if res is not None:
+        fig = px.scatter(x=[-f[0] for f in res.F], y=[-f[1] for f in res.F])
+        # fig.show()
 
-    constraints = np.array(res.G) + np.array([inst['K'], inst['B']])
-    result_table = np.array(-res.F).T.tolist() + constraints.T.tolist()
+        constraints = np.array(res.G) + np.array([inst['K'], inst['B']])
+        result_table = np.array(-res.F).T.tolist() + constraints.T.tolist()
 
-    # Print the best solutions found
-    logging.info("Best solutions (with binary decision variables):")
-    result_nodes = []
-    for sol in res.X:
-        sol = [i+1 for i, x in enumerate(sol) if x]
-        selected_nodes = ' - '.join([str(s+1) for s in sorted(sol)])
-        result_nodes.append(selected_nodes)
-        logging.info(sol)
+        # Print the best solutions found
+        logging.info("Best solutions (with binary decision variables):")
+        result_nodes = []
+        for sol in res.X:
+            sol = [i+1 for i, x in enumerate(sol) if x]
+            selected_nodes = ' - '.join([str(s+1) for s in sorted(sol)])
+            result_nodes.append(selected_nodes)
+            logging.info(sol)
 
-    result_table = [result_nodes] + result_table
-    result_table = pd.DataFrame(np.array(result_table).T,
-                                columns=['Solution', 'MaxSum', 'MaxMin', 'Cost', 'Capacity'])
-    results.save(result_table, secs, [], '', path)
+        result_table = [result_nodes] + result_table
+        result_table = pd.DataFrame(np.array(result_table).T,
+                                    columns=['Solution', 'MaxSum', 'MaxMin', 'Cost', 'Capacity'])
+        results.save(result_table, secs, [], '', path)
+
+    else:
+        logging.warning('No solution found for %s', path)
 
 
 def execute_directory(directory: str):
