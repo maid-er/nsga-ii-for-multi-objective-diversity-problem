@@ -7,8 +7,8 @@ import pandas as pd
 import plotly.express as px
 
 from pymoo.algorithms.moo.nsga2 import NSGA2
-
 from pymoo.algorithms.moo.spea2 import SPEA2
+
 from pymoo.operators.crossover.pntx import TwoPointCrossover
 from pymoo.operators.mutation.bitflip import BitflipMutation
 from pymoo.operators.sampling.rnd import BinaryRandomSampling
@@ -56,6 +56,7 @@ def execute_instance(path: str, results: OutputHandler) -> float:
     # Create the problem instance
     problem = BiObjectiveGeneralizedDiversityProblem(dist_matrix, costs, capacities, B, K)
     algorithm_set = ["NSGA2", "SPEA2"]
+    # algorithm_set = ['SPEA2']
     for algo in algorithm_set:
 
         if algo == "NSGA2":
@@ -95,18 +96,11 @@ def execute_instance(path: str, results: OutputHandler) -> float:
         secs = round(elapsed.total_seconds(), 2)
         logging.info('Execution time: %s', secs)
 
-<<<<<<< HEAD
-    # Visualize the Pareto front (objective space)
-    if res is not None:
-        fig = px.scatter(x=[-f[0] for f in res.F], y=[-f[1] for f in res.F])
-        # fig.show()
-=======
         # Visualize the Pareto front (objective space)
         fig = px.scatter(x=[-f[0] for f in res.F], y=[-f[1] for f in res.F])
-        fig.show()
->>>>>>> fbba92b34d3ea1fb849ee3bae2a63da84510b25d
+        # fig.show()
 
-        constraints = np.array(res.G) + np.array([inst['K'], inst['B']])
+        constraints = np.array([res.G[:, 0] + inst['K'], inst['B'] - res.G[:, 1]])
         result_table = np.array(-res.F).T.tolist() + constraints.T.tolist()
 
         # Print the best solutions found
@@ -121,14 +115,13 @@ def execute_instance(path: str, results: OutputHandler) -> float:
         result_table = [result_nodes] + result_table
         result_table = pd.DataFrame(np.array(result_table).T,
                                     columns=['Solution', 'MaxSum', 'MaxMin', 'Cost', 'Capacity'])
-<<<<<<< HEAD
-        results.save(result_table, secs, [], '', path)
+
+        results.save(result_table, secs, [], '', path, algo)
 
     else:
         logging.warning('No solution found for %s', path)
-=======
+
         results.save(result_table, secs, [], '', path, algo)
->>>>>>> fbba92b34d3ea1fb849ee3bae2a63da84510b25d
 
 
 def execute_directory(directory: str):
